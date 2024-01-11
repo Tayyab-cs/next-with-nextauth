@@ -2,27 +2,53 @@
 
 import React from "react";
 import { signIn } from "next-auth/react";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, message } from "antd";
 import { useRouter } from "next/navigation.js";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary.js";
 
 const Login = () => {
   const router = useRouter();
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     console.log("Success:", values);
-    signIn("credentials", {
-      redirect: false,
-      email: values.email,
-      password: values.password,
-    })
-      .then(() => {
-        console.log("successful login");
-        router.push("/welcome", { scroll: false });
-      })
-      .catch((err) => {
-        console.log("Error: ", err);
+    // signIn("credentials", {
+    //   redirect: false,
+    //   email: values.email,
+    //   password: values.password,
+    // })
+    //   .then(() => {
+    //     console.log("successful login");
+    //     router.push("/welcome", { scroll: false });
+    //   })
+    //   .catch((err) => {
+    //     console.log("Error: ", err);
+    //     message.error(err.message || "Authentication failed");
+    //   });
+    try {
+      console.log("Trying to sign in with credentials:", values);
+
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: values.email,
+        password: values.password,
       });
+      console.log("result of api call: ", result);
+
+      if (result.error) {
+        console.error("Authentication failed:", result.error);
+        // Handle authentication error here, you can redirect or show an error message
+        message.error(result.error || "Authentication failed");
+      } else {
+        console.log("Successful login");
+        message.success(`login successful with status code ${result.status}`);
+        router.push("/welcome", { scroll: false });
+      }
+    } catch (error) {
+      console.error("Error during authentication:", error);
+      message.error(error.message || "Authentication failed");
+    }
   };
+
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };

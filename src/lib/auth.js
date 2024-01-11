@@ -24,15 +24,17 @@ export const authOptions = {
 
           const data = await res.json();
 
+          console.log("data", data);
           if (data.success) {
-            const user = Promise.resolve(data.result.data);
+            const user = await Promise.resolve({
+              userData: data.result.data,
+              accessToken: data.accessToken,
+            });
             return user;
-          } else {
-            return Promise.resolve(null);
           }
         } catch (error) {
-          console.error("Error during authentication:", error);
-          return Promise.resolve(null);
+          console.error("Error during authentication:", error.message);
+          return Promise.reject(error);
         }
       },
     }),
@@ -42,13 +44,18 @@ export const authOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
+      console.log("user in token: ", user);
       if (user) {
+        token.name = user.userData.name;
+        token.email = user.userData.email;
         token.accessToken = user.accessToken;
       }
+      console.log("token: ", token);
       return token;
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken;
+      console.log("session: ", session);
       return session;
     },
   },
