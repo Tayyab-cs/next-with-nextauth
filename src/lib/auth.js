@@ -30,6 +30,7 @@ export const authOptions = {
               userData: data.result.data,
               accessToken: data.accessToken,
             });
+            console.log("auth console user: ", user);
             return user;
           }
         } catch (error) {
