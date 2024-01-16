@@ -12,7 +12,6 @@ import { User } from "@/components/user.component";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
-  console.log("session: ", session);
 
   return (
     <main

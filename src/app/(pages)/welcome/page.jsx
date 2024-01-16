@@ -2,12 +2,18 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation.js";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  increment,
+  decrement,
+  incrementByAmount,
+} from "@/lib/features/counter/counterSlice.js";
 
 const WelcomePage = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
-  console.log("session: ", session);
-  console.log("session status: ", status);
+  const counter = useSelector((state) => state.value);
+  const dispatch = useDispatch();
 
   if (status === "loading") {
     return <div>Loading...</div>;
@@ -18,7 +24,17 @@ const WelcomePage = () => {
   }
 
   if (status === "authenticated") {
-    return <div>Welcome to Protected Welcome Page</div>;
+    return (
+      <>
+        <h1>Counter: {counter}</h1>
+        <button onClick={() => dispatch(increment())}>increment</button>
+        <button onClick={() => dispatch(decrement())}>decrement</button>
+        <button onClick={() => dispatch(incrementByAmount(5))}>
+          incrementbyamount
+        </button>
+        <div>Welcome to Protected Welcome Page</div>
+      </>
+    );
   }
 };
 

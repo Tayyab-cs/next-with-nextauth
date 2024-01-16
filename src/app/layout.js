@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import { NextAuthProvider } from "./providers.jsx";
+import StoreProvider from "./StoreProvider.jsx";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,7 +13,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <NextAuthProvider>{children}</NextAuthProvider>
+        <StoreProvider>
+          <NextAuthProvider>{children}</NextAuthProvider>
+        </StoreProvider>
       </body>
     </html>
   );

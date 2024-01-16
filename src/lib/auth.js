@@ -24,7 +24,6 @@ export const authOptions = {
 
           const data = await res.json();
 
-          console.log("data", data);
           if (data.success) {
             const user = await Promise.resolve({
               userData: data.result.data,
@@ -45,18 +44,15 @@ export const authOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
-      console.log("user in token: ", user);
       if (user) {
         token.name = user.userData.name;
         token.email = user.userData.email;
         token.accessToken = user.accessToken;
       }
-      console.log("token: ", token);
       return token;
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken;
-      console.log("session: ", session);
       return session;
     },
   },

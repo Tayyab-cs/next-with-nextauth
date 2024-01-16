@@ -10,29 +10,12 @@ const Login = () => {
   const router = useRouter();
 
   const onFinish = async (values) => {
-    console.log("Success:", values);
-    // signIn("credentials", {
-    //   redirect: false,
-    //   email: values.email,
-    //   password: values.password,
-    // })
-    //   .then(() => {
-    //     console.log("successful login");
-    //     router.push("/welcome", { scroll: false });
-    //   })
-    //   .catch((err) => {
-    //     console.log("Error: ", err);
-    //     message.error(err.message || "Authentication failed");
-    //   });
     try {
-      console.log("Trying to sign in with credentials:", values);
-
       const result = await signIn("credentials", {
         redirect: false,
         email: values.email,
         password: values.password,
       });
-      console.log("result of api call: ", result);
 
       if (result.error) {
         console.error("Authentication failed:", result.error);
